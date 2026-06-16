@@ -4197,49 +4197,145 @@
        Animasi muncul perlahan saat user scroll ke bawah.
        Default tetap aman: tanpa JavaScript konten tetap terlihat.
     ========================================================= */
-    html.js-enabled .scroll-polish:not(.is-visible) {
-      opacity: 0 !important;
-      transform: translate3d(0, 44px, 0) scale(0.985) !important;
-      filter: blur(8px) !important;
-    }
-
     html.js-enabled .scroll-polish {
       transition:
-        opacity 920ms cubic-bezier(0.22, 1, 0.36, 1),
-        transform 920ms cubic-bezier(0.22, 1, 0.36, 1),
-        filter 920ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+        opacity 800ms cubic-bezier(0.25, 1, 0.5, 1),
+        transform 800ms cubic-bezier(0.25, 1, 0.5, 1),
+        filter 800ms cubic-bezier(0.25, 1, 0.5, 1) !important;
       transition-delay: var(--scroll-delay, 0ms) !important;
       will-change: opacity, transform, filter;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
+      transform-style: preserve-3d;
+    }
+
+    /* Out of view states (not is-visible) - triggers exit animation */
+    html.js-enabled .scroll-polish:not(.is-visible) {
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
 
     html.js-enabled .scroll-polish.is-visible {
       opacity: 1 !important;
-      transform: translate3d(0, 0, 0) scale(1) !important;
-      filter: blur(0) !important;
+      transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg) scale(1) !important;
+      filter: blur(0px) !important;
     }
 
-    html.js-enabled .scroll-polish[data-scroll-animation="left"]:not(.is-visible) {
-      transform: translate3d(-42px, 30px, 0) scale(0.985) !important;
-    }
-
-    html.js-enabled .scroll-polish[data-scroll-animation="right"]:not(.is-visible) {
-      transform: translate3d(42px, 30px, 0) scale(0.985) !important;
-    }
-
-    html.js-enabled .scroll-polish[data-scroll-animation="zoom"]:not(.is-visible) {
-      transform: translate3d(0, 32px, 0) scale(0.955) !important;
-    }
-
-    html.js-enabled .scroll-polish[data-scroll-animation="soft"]:not(.is-visible) {
-      transform: translate3d(0, 24px, 0) scale(0.995) !important;
+    /* 1. Fade Up */
+    html.js-enabled .scroll-polish[data-scroll-animation="fade-up"]:not(.is-visible) {
+      transform: translate3d(0, 48px, 0) !important;
       filter: blur(4px) !important;
     }
 
-    html.js-enabled .scroll-polish-finished {
-      will-change: auto !important;
-      transition-delay: 0ms !important;
+    /* 2. Fade Down */
+    html.js-enabled .scroll-polish[data-scroll-animation="fade-down"]:not(.is-visible) {
+      transform: translate3d(0, -48px, 0) !important;
+      filter: blur(4px) !important;
+    }
+
+    /* 3. Fade Left (slide in from left) */
+    html.js-enabled .scroll-polish[data-scroll-animation="fade-left"]:not(.is-visible) {
+      transform: translate3d(-52px, 0, 0) !important;
+      filter: blur(4px) !important;
+    }
+
+    /* 4. Fade Right (slide in from right) */
+    html.js-enabled .scroll-polish[data-scroll-animation="fade-right"]:not(.is-visible) {
+      transform: translate3d(52px, 0, 0) !important;
+      filter: blur(4px) !important;
+    }
+
+    /* 5. Zoom In */
+    html.js-enabled .scroll-polish[data-scroll-animation="zoom-in"]:not(.is-visible) {
+      transform: translate3d(0, 18px, 0) scale(0.86) !important;
+      filter: blur(6px) !important;
+    }
+
+    /* 6. Zoom Out */
+    html.js-enabled .scroll-polish[data-scroll-animation="zoom-out"]:not(.is-visible) {
+      transform: translate3d(0, -10px, 0) scale(1.14) !important;
+      filter: blur(6px) !important;
+    }
+
+    /* 7. Flip X (3D flip forward) */
+    html.js-enabled .scroll-polish[data-scroll-animation="flip-x"]:not(.is-visible) {
+      transform: rotateX(-65deg) translate3d(0, 24px, 0) !important;
+      filter: blur(4px) !important;
+    }
+
+    /* 8. Flip Y (3D flip side) */
+    html.js-enabled .scroll-polish[data-scroll-animation="flip-y"]:not(.is-visible) {
+      transform: rotateY(65deg) translate3d(-24px, 0, 0) !important;
+      filter: blur(4px) !important;
+    }
+
+    /* 9. Blur In */
+    html.js-enabled .scroll-polish[data-scroll-animation="blur-in"]:not(.is-visible) {
+      transform: scale(0.97) !important;
+      filter: blur(16px) !important;
+    }
+
+    /* Restore hover lift for cards when they are visible */
+    .info-card.scroll-polish.is-visible:hover,
+    .skill-card.scroll-polish.is-visible:hover,
+    .project-card.scroll-polish.is-visible:hover,
+    .timeline-card.scroll-polish.is-visible:hover {
+      transform: translateY(-5px) !important;
+      border-color: rgba(214, 169, 74, 0.38) !important;
+      background: rgba(255, 255, 255, 0.085) !important;
+    }
+
+    /* Layered/Staggered text animations inside cards/section-headers */
+    html.js-enabled .scroll-polish .section-number,
+    html.js-enabled .scroll-polish h2,
+    html.js-enabled .scroll-polish h3,
+    html.js-enabled .scroll-polish p,
+    html.js-enabled .scroll-polish .lead,
+    html.js-enabled .scroll-polish .about-highlight,
+    html.js-enabled .scroll-polish .tag,
+    html.js-enabled .scroll-polish .btn,
+    html.js-enabled .scroll-polish .btn-secondary,
+    html.js-enabled .scroll-polish li {
+      opacity: 0 !important;
+      transform: translate3d(0, 15px, 0) !important;
+      transition:
+        opacity 650ms cubic-bezier(0.25, 1, 0.5, 1),
+        transform 650ms cubic-bezier(0.25, 1, 0.5, 1) !important;
+      will-change: opacity, transform;
+    }
+
+    /* When parent is visible, trigger child animations with staggered delays */
+    html.js-enabled .scroll-polish.is-visible .section-number,
+    html.js-enabled .scroll-polish.is-visible h2,
+    html.js-enabled .scroll-polish.is-visible h3,
+    html.js-enabled .scroll-polish.is-visible p,
+    html.js-enabled .scroll-polish.is-visible .lead,
+    html.js-enabled .scroll-polish.is-visible .about-highlight,
+    html.js-enabled .scroll-polish.is-visible .tag,
+    html.js-enabled .scroll-polish.is-visible .btn,
+    html.js-enabled .scroll-polish.is-visible .btn-secondary,
+    html.js-enabled .scroll-polish.is-visible li {
+      opacity: 1 !important;
+      transform: translate3d(0, 0, 0) !important;
+    }
+
+    /* Staggered delay assignments relative to parent scroll-delay */
+    html.js-enabled .scroll-polish.is-visible h2,
+    html.js-enabled .scroll-polish.is-visible h3 {
+      transition-delay: calc(var(--scroll-delay, 0ms) + 120ms) !important;
+    }
+
+    html.js-enabled .scroll-polish.is-visible p,
+    html.js-enabled .scroll-polish.is-visible .lead,
+    html.js-enabled .scroll-polish.is-visible li {
+      transition-delay: calc(var(--scroll-delay, 0ms) + 200ms) !important;
+    }
+
+    html.js-enabled .scroll-polish.is-visible .about-highlight,
+    html.js-enabled .scroll-polish.is-visible .tag,
+    html.js-enabled .scroll-polish.is-visible .btn,
+    html.js-enabled .scroll-polish.is-visible .btn-secondary {
+      transition-delay: calc(var(--scroll-delay, 0ms) + 280ms) !important;
     }
 
     .section.is-scroll-active .section-number {
@@ -4255,31 +4351,22 @@
     }
 
     @media (max-width: 760px) {
-      html.js-enabled .scroll-polish:not(.is-visible),
-      html.js-enabled .scroll-polish[data-scroll-animation="left"]:not(.is-visible),
-      html.js-enabled .scroll-polish[data-scroll-animation="right"]:not(.is-visible),
-      html.js-enabled .scroll-polish[data-scroll-animation="zoom"]:not(.is-visible),
-      html.js-enabled .scroll-polish[data-scroll-animation="soft"]:not(.is-visible) {
-        transform: translate3d(0, 26px, 0) scale(0.99) !important;
-        filter: blur(4px) !important;
-      }
-
       html.js-enabled .scroll-polish {
-        transition-duration: 760ms !important;
+        transition-duration: 600ms;
       }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html.js-enabled .scroll-polish,
       html.js-enabled .scroll-polish:not(.is-visible),
-      html.js-enabled .scroll-polish.is-visible {
-        opacity: 1 !important;
-        transform: none !important;
-        filter: none !important;
-        transition: none !important;
+      html.js-enabled .scroll-polish[data-scroll-animation]:not(.is-visible) {
+        filter: none !important; /* disable heavy blur filter on mobile for performance */
+      }
+      html.js-enabled .scroll-polish[data-scroll-animation="flip-x"]:not(.is-visible) {
+        transform: rotateX(-35deg) translate3d(0, 16px, 0);
+      }
+      html.js-enabled .scroll-polish[data-scroll-animation="flip-y"]:not(.is-visible) {
+        transform: rotateY(35deg) translate3d(-16px, 0, 0);
       }
     }
 
+    /* prefers-reduced-motion block removed to allow portfolio animations to display by default */
 
 /* ===== SCROLL EXPERIENCE UPGRADE ===== */
 
@@ -4324,47 +4411,6 @@
 .progress-bar {
   transition: width 0.15s linear;
 }
-
-
-
-    /* =========================================================
-       REPEATED SCROLL + MOBILE PERFORMANCE FINAL PATCH
-    ========================================================= */
-    html.js-enabled .scroll-polish {
-      opacity: 1 !important;
-      transform: translate3d(0, 0, 0) scale(1) !important;
-      filter: none !important;
-      transition:
-        opacity 640ms cubic-bezier(0.22, 1, 0.36, 1),
-        transform 640ms cubic-bezier(0.22, 1, 0.36, 1) !important;
-      transition-delay: var(--scroll-delay, 0ms) !important;
-      will-change: auto !important;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-    }
-
-    html.js-enabled .scroll-polish:not(.is-visible) {
-      opacity: 0 !important;
-      transform: translate3d(0, 30px, 0) scale(0.988) !important;
-      filter: none !important;
-      will-change: opacity, transform !important;
-    }
-
-    html.js-enabled .scroll-polish[data-scroll-animation="left"]:not(.is-visible) {
-      transform: translate3d(-32px, 22px, 0) scale(0.988) !important;
-    }
-
-    html.js-enabled .scroll-polish[data-scroll-animation="right"]:not(.is-visible) {
-      transform: translate3d(32px, 22px, 0) scale(0.988) !important;
-    }
-
-    html.js-enabled .scroll-polish[data-scroll-animation="zoom"]:not(.is-visible) {
-      transform: translate3d(0, 22px, 0) scale(0.968) !important;
-    }
-
-    html.js-enabled .scroll-polish[data-scroll-animation="soft"]:not(.is-visible) {
-      transform: translate3d(0, 18px, 0) scale(0.995) !important;
-    }
 
     html.page-hidden .ambient-orb,
     html.page-hidden .ambient-bg::after,
@@ -6092,7 +6138,7 @@
       var isMobile = false;
 
       try {
-        reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        reduceMotion = false; // Forced false to ensure portfolio scroll animations always display
         isMobile = window.matchMedia('(max-width: 760px)').matches;
       } catch (error) {}
 
@@ -6117,16 +6163,42 @@
       }
 
       function getVariant(el) {
-        if (el.classList.contains('section-head')) return 'soft';
-        if (el.classList.contains('hero-panel') || el.classList.contains('focus-box')) return 'zoom';
-        if (el.classList.contains('timeline-card')) return 'left';
+        if (el.classList.contains('section-head')) {
+          return 'blur-in';
+        }
+        if (el.classList.contains('hero-panel')) {
+          return 'zoom-out';
+        }
+        if (el.classList.contains('focus-box')) {
+          return 'fade-up';
+        }
+        if (el.classList.contains('timeline-card')) {
+          var cards = Array.prototype.slice.call(document.querySelectorAll('.timeline-card'));
+          var index = cards.indexOf(el);
+          return index % 2 === 0 ? 'fade-left' : 'fade-right';
+        }
+        if (el.classList.contains('skill-card')) {
+          var cards = Array.prototype.slice.call(document.querySelectorAll('.skill-card'));
+          var index = cards.indexOf(el);
+          var variants = ['flip-y', 'zoom-in', 'fade-up', 'flip-x'];
+          return variants[index % variants.length];
+        }
+        if (el.classList.contains('project-card')) {
+          var cards = Array.prototype.slice.call(document.querySelectorAll('.project-card'));
+          var index = cards.indexOf(el);
+          return index % 2 === 0 ? 'flip-y' : 'zoom-in';
+        }
+        if (el.classList.contains('info-card')) {
+          var cards = Array.prototype.slice.call(document.querySelectorAll('.info-card'));
+          var index = cards.indexOf(el);
+          return index % 2 === 0 ? 'fade-left' : 'fade-right';
+        }
         if (el.closest('.hero-grid') || el.closest('.two-col') || el.closest('.contact-grid')) {
           var parent = el.parentElement;
           var index = parent ? Array.prototype.indexOf.call(parent.children, el) : 0;
-          return index % 2 === 0 ? 'left' : 'right';
+          return index % 2 === 0 ? 'fade-left' : 'fade-right';
         }
-        if (el.classList.contains('project-card') || el.classList.contains('skill-card')) return 'zoom';
-        return 'soft';
+        return 'fade-up';
       }
 
       function initRepeatableReveal() {
@@ -6144,15 +6216,20 @@
         ].join(', ');
 
         var elements = uniqueElements(Array.prototype.slice.call(document.querySelectorAll(selector)));
+        console.log("[ScrollAnimation] Found " + elements.length + " animatable elements matching selector.");
+
         if (!elements.length) return;
 
         elements.forEach(function(el) {
+          var variant = getVariant(el);
           el.classList.add('scroll-polish');
-          el.setAttribute('data-scroll-animation', getVariant(el));
+          el.setAttribute('data-scroll-animation', variant);
           el.style.setProperty('--scroll-delay', getDelay(el) + 'ms');
+          console.log("[ScrollAnimation] Initialized element:", el.tagName, el.className, "with variant:", variant);
         });
 
         if (reduceMotion || !('IntersectionObserver' in window)) {
+          console.warn("[ScrollAnimation] IntersectionObserver not supported or reduceMotion active. Displaying all elements.");
           elements.forEach(function(el) { el.classList.add('is-visible'); });
           return;
         }
@@ -6162,8 +6239,10 @@
             var el = entry.target;
             if (entry.isIntersecting) {
               el.classList.add('is-visible');
+              console.log("[ScrollAnimation] Element entered viewport (is-visible added):", el.tagName, el.className, "variant:", el.getAttribute('data-scroll-animation'));
             } else {
               el.classList.remove('is-visible');
+              console.log("[ScrollAnimation] Element exited viewport (is-visible removed):", el.tagName, el.className);
             }
           });
         }, {
